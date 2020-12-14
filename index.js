@@ -9,14 +9,25 @@ const fs = require("fs");
 
 const client = new Client();
 
+
+let images = [];
+fs.readdirSync('./assets').filter(file => file.endsWith('.png')).forEach(file => {
+    images.push(file);
+});
+
 client.on('ready', () => {
     console.log('Bot is ready!');
 });
 
 client.on('message', message => {
-    if(message.content == 'ping') {
-        message.reply("pong");
+    let raw = message.content.toLowerCase();
+    for(let image of images) {
+        let stripped = image.substring(0, image.length - 4);
+        if(raw == stripped) {
+            message.channel.send({files: ["./assets/" + image]});
+        }
     }
+
     
 });
 
