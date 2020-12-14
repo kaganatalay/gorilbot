@@ -9,7 +9,6 @@ const fs = require("fs");
 
 const client = new Client();
 
-
 let images = [];
 let description = '\n';
 fs.readdirSync('./assets').filter(file => file.endsWith('.png')).forEach(file => {
@@ -18,12 +17,13 @@ fs.readdirSync('./assets').filter(file => file.endsWith('.png')).forEach(file =>
         url: file
     }
 
-    description += entry.command + "\n";
+    description += " " + entry.command + "\n";
     images.push(entry);
 });
 
 client.on('ready', () => {
     console.log('Bot is ready!');
+    client.user.setActivity("Yarwdım"); 
 });
 
 client.on('message', message => {
