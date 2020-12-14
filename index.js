@@ -11,8 +11,15 @@ const client = new Client();
 
 
 let images = [];
+let description = '\n';
 fs.readdirSync('./assets').filter(file => file.endsWith('.png')).forEach(file => {
-    images.push(file);
+    let entry = {
+        command: file.substring(0, file.length - 4),
+        url: file
+    }
+
+    description += entry.command + "\n";
+    images.push(entry);
 });
 
 client.on('ready', () => {
@@ -21,10 +28,19 @@ client.on('ready', () => {
 
 client.on('message', message => {
     let raw = message.content.toLowerCase();
-    for(let image of images) {
-        let stripped = image.substring(0, image.length - 4);
-        if(raw == stripped) {
-            message.channel.send({files: ["./assets/" + image]});
+
+    if(raw == 'yarwdım') {
+        const embed = new MessageEmbed()
+        .setColor('#e67e22')
+        .setTitle('Kullanılabilir Kowmutlar')
+        .setDescription(`\`\`\` ${description} \`\`\``);
+
+        message.channel.send(embed);
+    } else {
+        for(let image of images) {
+            if(raw == image.command) {
+                message.channel.send({files: ["./assets/" + image.url]});
+            }
         }
     }
 
