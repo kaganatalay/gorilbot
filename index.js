@@ -4,33 +4,23 @@ if (discordKey === undefined) {
     process.exit(1);
 }
 
-const { Client, Message, MessageEmbed } = require("discord.js");
-const fs = require("fs");
+const loader = require('./helpers/loadAssetsToMemory.js');
+const discord = require('discord.js');
 
-const client = new Client();
+const client = new discord.Client();
 
-let images = [];
-let description = '\n';
-fs.readdirSync('./assets').filter(file => file.endsWith('.png')).forEach(file => {
-    let entry = {
-        command: file.substring(0, file.length - 4),
-        url: file
-    }
-
-    description += " " + entry.command + "\n";
-    images.push(entry);
-});
+let { assets, description } = loader.load();
 
 client.on('ready', () => {
-    console.log('Bot is ready!');
-    client.user.setActivity("Yarwdım"); 
+    console.log('Beep boop 🤖');
+    client.user.setActivity('Yarwdım');
 });
 
 client.on('message', message => {
     let raw = message.content.toLowerCase();
-
+    console.log(message);
     if(raw == 'yarwdım') {
-        const embed = new MessageEmbed()
+        const embed = new discord.MessageEmbed()
         .setColor('#e67e22')
         .setTitle('Kullanılabilir Kowmutlar')
         .setDescription(`\`\`\` ${description} \`\`\``);
@@ -43,8 +33,6 @@ client.on('message', message => {
             }
         }
     }
-
-    
 });
 
 client.login(discordKey);
